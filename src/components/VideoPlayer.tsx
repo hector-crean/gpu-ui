@@ -57,14 +57,17 @@ class VideoShaderMaterial extends THREE.ShaderMaterial {
           
           // Sample the mask texture
           vec4 maskColor = texture2D(uMaskTexture, correctedUV);
-
           float mask = maskColor.r; // Use red channel as mask
-                    
-          // Create outline effect
-          vec2 texelSize = 1.0 / uVideoResolution;
+           
+          // Create flashing effect using time
+          float flashSpeed = 3.0; // Flashes per second
+          float flash = sin(uTime * flashSpeed * 6.28318) * 0.5 + 0.5; // Oscillates between 0 and 1
           
+          // Create red color
           vec3 red = vec3(1.0, 0.0, 0.0);
-         vec3 color = mix(videoColor.rgb, red, mask);
+          
+          // Mix between video color and red based on mask and flash
+          vec3 color = mix(videoColor.rgb, red, mask * flash);
           
           gl_FragColor = vec4(color, 1.0);
         }
